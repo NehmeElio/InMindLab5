@@ -18,7 +18,7 @@ public class CourseService:ICourseService
 
     public long GetMaxCourseId()
     {
-        return _context.Courses.Max(x => x.Id);
+        return _context.Courses.Any()?_context.Courses.Max(x => x.Id):0;
     }
 
     public Course AddCourse(string name, NpgsqlRange<DateOnly> dateRange, int maxNumberOfStudents)

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+﻿namespace UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
 
 public partial class Grade
 {

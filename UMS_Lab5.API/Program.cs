@@ -13,7 +13,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UMSContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IAdminService, AdminService>();
-    
+builder.Services.AddScoped<ITeacherService, TeacherService>();  
+builder.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssembly(typeof(AdminService).Assembly));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
