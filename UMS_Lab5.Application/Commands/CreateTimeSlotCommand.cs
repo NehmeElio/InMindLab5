@@ -1,6 +1,7 @@
 ﻿using MediatR;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Persistence.Models;
+
 
 namespace UMS_Lab5.Application.Commands;
 
-public record CreateTimeSlotCommand(DateTime StartTime, DateTime EndTime):IRequest<SessionTime>;
+public record CreateTimeSlotCommand(int TeacherId, DateTime StartTime, DateTime EndTime):IRequest<SessionTime>;

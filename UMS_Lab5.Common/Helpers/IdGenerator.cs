@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Persistence.Models;
+
+
 using System.Linq;
 
 namespace UMS_Lab5.Common.Helpers

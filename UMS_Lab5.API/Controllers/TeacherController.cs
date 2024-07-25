@@ -33,13 +33,28 @@ public class TeacherController:ControllerBase
 
     }
     [HttpPost("CreateTimeSlot")]
-    public IActionResult CreateTimeSlot(DateTime startTime, DateTime endTime)
+    public IActionResult CreateTimeSlot(int teacherId,DateTime startTime, DateTime endTime)
     {
         try
         {
-            var command = new CreateTimeSlotCommand(startTime,endTime);
+            var command = new CreateTimeSlotCommand(teacherId,startTime,endTime);
             var result = _sender.Send(command);
             return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
+    
+    [HttpPost("AssignSessionTimeToTeacherPerCourse")]
+    public IActionResult AssignSessionTimeToTeacherPerCourse([FromQuery]int teacherId,[FromQuery] int courseId,[FromQuery] int timeSlotId)
+    {
+        try
+        {
+            var command = new RegisterTimeSlotForCourseCommand( courseId, teacherId, timeSlotId);
+            var result = _sender.Send(command);
+            return Ok();
         }
         catch (Exception e)
         {

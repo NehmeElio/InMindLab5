@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UMS_Lab5.Application;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Persistence.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

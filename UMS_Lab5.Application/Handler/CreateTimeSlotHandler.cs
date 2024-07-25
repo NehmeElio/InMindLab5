@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using UMS_Lab5.Application.Commands;
 using UMS_Lab5.Common.Helpers;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Persistence.Models;
+
 
 namespace UMS_Lab5.Application.Handler;
 
@@ -20,6 +21,7 @@ public class CreateTimeSlotHandler:IRequestHandler<CreateTimeSlotCommand,Session
         var sessionTime=new SessionTime()
         {
             Id = IdGenerator.GenerateNewId<SessionTime>(_context),
+            TeacherId = request.TeacherId,
             StartTime = request.StartTime,
             EndTime = request.EndTime,
             Duration = (int)duration.TotalMinutes

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+namespace UMS_Lab5.Persistence.Models;
 
 public partial class User
 {
@@ -20,6 +20,8 @@ public partial class User
     public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
     public virtual Role Role { get; set; } = null!;
+
+    public virtual ICollection<SessionTime> SessionTimes { get; set; } = new List<SessionTime>();
 
     public virtual ICollection<TeacherPerCourse> TeacherPerCourses { get; set; } = new List<TeacherPerCourse>();
 }

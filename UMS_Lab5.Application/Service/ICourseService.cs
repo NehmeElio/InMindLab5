@@ -1,5 +1,6 @@
 ﻿using NpgsqlTypes;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Persistence.Models;
+
 
 namespace UMS_Lab5.Application;
 
