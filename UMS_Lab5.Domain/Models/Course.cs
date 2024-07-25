@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NpgsqlTypes;
 
-namespace UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+namespace UMS_Lab5.Persistence.Models;
 
 public partial class Course
 {
@@ -17,6 +17,4 @@ public partial class Course
     public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
     public virtual ICollection<TeacherPerCourse> TeacherPerCourses { get; set; } = new List<TeacherPerCourse>();
-    
-    
 }

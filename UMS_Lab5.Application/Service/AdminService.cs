@@ -1,5 +1,7 @@
 ﻿using NpgsqlTypes;
-using UMS_Lab5.Persistence.UMS_Lab5.Domain.Models;
+using UMS_Lab5.Application.DTO;
+using UMS_Lab5.Persistence.Models;
+
 
 namespace UMS_Lab5.Application;
 
@@ -12,14 +14,14 @@ public class AdminService: IAdminService
         _context = context;
     }
 
-    public void AdminCreateCourse(string name, NpgsqlRange<DateOnly> dateRange, int maxNumberOfStudents)
+    public void AdminCreateCourse(CreateCourseDto courseDto)
     {
         var course = new Course
         {
             Id = _context.Courses.Any() ? _context.Courses.Max(c => c.Id) + 1 : 1,
-            Name = name,
-            EnrolmentDateRange = dateRange,
-            MaxStudentsNumber = maxNumberOfStudents,
+            Name = courseDto.Name,
+            EnrolmentDateRange = new NpgsqlRange<DateOnly>(courseDto.StartDate, courseDto.EndDate),
+            MaxStudentsNumber = courseDto.MaxNumberOfStudents
 
         };
         _context.Courses.Add(course);
