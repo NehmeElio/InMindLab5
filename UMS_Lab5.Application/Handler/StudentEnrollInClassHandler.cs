@@ -17,7 +17,12 @@ public class StudentEnrollInClassHandler:IRequestHandler<StudentEnrollInClassCom
     public Task<ClassEnrollment> Handle(StudentEnrollInClassCommand request, CancellationToken cancellationToken)
     {
         var currentDate = request.currentDate;
-        
+        var existingClassEnrollment = _context.ClassEnrollments
+            .FirstOrDefault(e => e.StudentId == request.studentId && e.ClassId == request.teacherPerCourseId);
+        if (existingClassEnrollment != null)
+        {
+            throw new InvalidOperationException("Student is already enrolled in this course.");
+        }
         var existingTeacherPerCourse = _context.TeacherPerCourses
             .FirstOrDefault(tpc => tpc.Id == request.teacherPerCourseId);
         if (existingTeacherPerCourse == null)
