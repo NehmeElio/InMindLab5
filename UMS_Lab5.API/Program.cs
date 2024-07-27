@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
@@ -39,6 +40,9 @@ builder.Services.AddControllers().AddOData(
         "odata",modelBuilder.GetEdmModel()));
 builder.Services.AddScoped<GradeService>();
 builder.Services.AddMemoryCache();
+
+
+
 var app = builder.Build();
 
 
