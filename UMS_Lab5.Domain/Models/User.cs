@@ -15,6 +15,8 @@ public partial class User
 
     public string Email { get; set; } = null!;
 
+    public virtual ICollection<Average> Averages { get; set; } = new List<Average>();
+
     public virtual ICollection<ClassEnrollment> ClassEnrollments { get; set; } = new List<ClassEnrollment>();
 
     public virtual ICollection<Grade> Grades { get; set; } = new List<Grade>();
