@@ -15,6 +15,8 @@ public partial class UMSContext : DbContext
     {
     }
 
+    public virtual DbSet<Average> Averages { get; set; }
+
     public virtual DbSet<ClassEnrollment> ClassEnrollments { get; set; }
 
     public virtual DbSet<Course> Courses { get; set; }
@@ -32,11 +34,27 @@ public partial class UMSContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https: //go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Host=localhost;Database=ums;Username=postgres;Password=123;Include Error Detail=True");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseNpgsql("Host=localhost;Database=ums;Username=postgres;Password=123");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Average>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("average_pk");
+
+            entity.ToTable("Average");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.AverageGrade).HasPrecision(5, 2);
+
+            entity.HasOne(d => d.Student).WithMany(p => p.Averages)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("average___fk");
+        });
+
         modelBuilder.Entity<ClassEnrollment>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("classenrollment_pk");
@@ -78,14 +96,15 @@ public partial class UMSContext : DbContext
             entity.Property(e => e.Grade1)
                 .HasPrecision(5, 2)
                 .HasColumnName("Grade");
-
-            entity.HasOne(d => d.Course).WithMany(p => p.Grades)
-                .HasForeignKey(d => d.CourseId)
-                .HasConstraintName("grade_courses_id_fk");
+            entity.Property(e => e.Teacherpercourseid).HasColumnName("teacherpercourseid");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Grades)
                 .HasForeignKey(d => d.StudentId)
                 .HasConstraintName("grade_users_id_fk");
+
+            entity.HasOne(d => d.Teacherpercourse).WithMany(p => p.Grades)
+                .HasForeignKey(d => d.Teacherpercourseid)
+                .HasConstraintName("grade_courses_id_fk");
         });
 
         modelBuilder.Entity<Role>(entity =>

@@ -37,6 +37,8 @@ modelBuilder.EntitySet<User>("Users");
 builder.Services.AddControllers().AddOData(
     options => options.Select().Filter().OrderBy().Expand().Count().SetMaxTop(null).AddRouteComponents(
         "odata",modelBuilder.GetEdmModel()));
+builder.Services.AddScoped<GradeService>();
+builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 
