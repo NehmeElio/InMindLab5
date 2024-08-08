@@ -1,6 +1,11 @@
-﻿using MediatR;
+﻿using System.Text.Json;
+using EnrollmentService.Application.Service;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using UMS_Lab5.Application;
 using UMS_Lab5.Application.Commands;
+using UMS_Lab5.Application.DTO;
+using UMS_Lab5.Application.Service;
 
 namespace UMS_Lab5.API.Controllers;
 
@@ -9,9 +14,15 @@ namespace UMS_Lab5.API.Controllers;
 public class StudentController:ControllerBase
 {
     private readonly ISender _sender;
-    public StudentController(ISender sender)
+    private readonly IRabbitMQService _rabbitMQService;
+    private readonly ICourseService _courseService;
+    private readonly ILogger<StudentController> _logger;
+    public StudentController(ISender sender,IRabbitMQService rabbitMQService,ICourseService courseService,ILogger<StudentController> logger)
     {
         _sender = sender;
+        _rabbitMQService = rabbitMQService;
+        _courseService = courseService;
+        _logger = logger;
     }
     
     [HttpPost("EnrollInCourse")]
@@ -28,5 +39,18 @@ public class StudentController:ControllerBase
             return BadRequest(e.Message);
         }
         
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddCourse([FromBody] AddCourseDTO course)
+    {
+        
+        // Convert the course request to a message format, e.g., JSON
+        var message = JsonSerializer.Serialize(course);
+
+        // Publish the message to RabbitMQ
+        _rabbitMQService.PublishMessage(message);
+
+        return Ok("Course addition request sent.");
     }
 }

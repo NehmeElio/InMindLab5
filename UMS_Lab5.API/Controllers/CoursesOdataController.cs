@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using UMS_Lab5.Persistence.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using UMS_Lab5.Persistence;
 
 namespace UMS_Lab5.API.Controllers
 {
@@ -10,7 +11,8 @@ namespace UMS_Lab5.API.Controllers
     [Route("[controller]")]
     public class CoursesOdataController : ODataController
     {
-        private readonly UMSContext _context;
+       private readonly UMSContext _context;
+       //private readonly MultiTenantContext _context;
 
         public CoursesOdataController(UMSContext context)
         {

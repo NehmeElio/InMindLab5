@@ -1,8 +1,11 @@
+using EnrollmentService.Application.Service;
 using MediatR;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.ModelBuilder;
 using UMS_Lab5.Application;
+using UMS_Lab5.Application.Service;
+using UMS_Lab5.Persistence;
 using UMS_Lab5.Persistence.Models;
 
 
@@ -17,8 +20,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<UMSContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddScoped<ITeacherService, TeacherService>();  
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 builder.Services.AddMediatR(cfg=>cfg.RegisterServicesFromAssembly(typeof(AdminService).Assembly));
+
+builder.Services.AddScoped<IRabbitMQService, RabbitMQService>();
+//builder.Services.AddHostedService<RabbitMQConsumerService>();
 
 var modelBuilder = new ODataConventionModelBuilder();
 modelBuilder.EntityType<Grade>();
@@ -41,7 +48,41 @@ builder.Services.AddControllers().AddOData(
 builder.Services.AddScoped<GradeService>();
 builder.Services.AddMemoryCache();
 
+builder.Services.AddHttpContextAccessor();
+/*builder.Services.AddScoped<MultiTenantContext>(provider =>
+{
+    var httpContextAccessor = provider.GetRequiredService<IHttpContextAccessor>();
+    var branchId = httpContextAccessor.HttpContext?.Items["BranchId"].ToString();
+    var schemaName = GetSchemaNameForBranch(branchId);
 
+    var optionsBuilder = new DbContextOptionsBuilder<UMSContext>();
+    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    return new MultiTenantContext(optionsBuilder.Options, "arts_branch");
+});*/
+builder.Services.AddScoped<MultiTenantContext>(provider =>
+{
+    var optionsBuilder = new DbContextOptionsBuilder<MultiTenantContext>();
+    optionsBuilder.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    
+    // Hard-code the schema name here
+    var schemaName = "science_branch";
+
+    return new MultiTenantContext(optionsBuilder.Options, schemaName);
+});
+
+
+string GetSchemaNameForBranch(string branchId)
+{
+    Console.WriteLine($"Received BranchId: {branchId}");
+    // Implement schema name resolution logic based on branchId
+    return branchId switch
+    {
+        "1" => "arts_branch",
+        "2" => "science_branch",
+        _ => throw new Exception("Unknown branch ID")
+    };
+}
 
 var app = builder.Build();
 
